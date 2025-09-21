@@ -11,7 +11,7 @@ public class CreateProductResponseDto {
     private Long Id;
     private String Title;
     private String Description;
-    private double Price;
+    private Double Price;
     private String ImageUrl;
 
     public static CreateProductResponseDto fromProduct(Product product) {

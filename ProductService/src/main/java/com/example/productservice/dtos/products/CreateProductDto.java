@@ -12,7 +12,7 @@ public class CreateProductDto {
     private Long Id;
     private String Title;
     private String Description;
-    private double Price;
+    private Double Price;
     private String ImageUrl;
     private String CategoryName;
 

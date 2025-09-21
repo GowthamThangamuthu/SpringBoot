@@ -1,5 +1,6 @@
 package com.example.productservice.services;
 
+import com.example.productservice.exceptions.ProductNotFoundException;
 import com.example.productservice.models.Category;
 import com.example.productservice.models.Product;
 import com.example.productservice.repositories.CategoryRepository;
@@ -23,19 +24,7 @@ public class ProductServiceDBImpl implements ProductService {
 
     @Override
     public Product createProduct(Product product) {
-        String categoryName = product.getCategory().getName();
-
-        Optional<Category> category = categoryRepository.findByName(categoryName);
-        Category toBePutInProduct = null;
-
-        if(category.isEmpty()){
-            Category toSaveCategory = new Category();
-            toSaveCategory.setName(categoryName);
-
-             toBePutInProduct = categoryRepository.save(toSaveCategory);
-        } else {
-            toBePutInProduct = category.get();
-        }
+        Category toBePutInProduct = getCategoryOrCreate(product);
 
         product.setCategory(toBePutInProduct);
 
@@ -50,6 +39,50 @@ public class ProductServiceDBImpl implements ProductService {
 
     @Override
     public Product partialUpdateProduct(Long ProductId, Product product) {
-        return null;
+
+        Optional<Product> productToUpdate = productRepository.findById(ProductId);
+
+        if(productToUpdate.isEmpty()){
+            throw new ProductNotFoundException("Product not found with id: " + ProductId);
+        }
+
+        if(product.getTitle() != null) {
+            productToUpdate.get().setTitle(product.getTitle());
+        }
+
+        if(product.getDescription() != null) {
+            productToUpdate.get().setDescription(product.getDescription());
+        }
+
+        if(product.getPrice() != null){
+            productToUpdate.get().setPrice(product.getPrice());
+        }
+
+        if(product.getCategory() != null) {
+            Category toBePutInProduct = getCategoryOrCreate(product);
+
+            productToUpdate.get().setCategory(toBePutInProduct);
+        }
+
+
+        return productRepository.save(productToUpdate.get());
     }
+
+    private Category getCategoryOrCreate(Product product) {
+        String categoryName = product.getCategory().getName();
+
+        Optional<Category> category = categoryRepository.findByName(categoryName);
+        Category toBePutInProduct = null;
+
+        if(category.isEmpty()){
+            Category toSaveCategory = new Category();
+            toSaveCategory.setName(categoryName);
+
+            toBePutInProduct = categoryRepository.save(toSaveCategory);
+        } else {
+            toBePutInProduct = category.get();
+        }
+        return toBePutInProduct;
+    }
+
 }

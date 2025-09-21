@@ -10,7 +10,7 @@ public class GetProductDto {
     private Long Id;
     private String Title;
     private String Description;
-    private double Price;
+    private Double Price;
     private String ImageUrl;
 
     public static GetProductDto from(Product product) {
