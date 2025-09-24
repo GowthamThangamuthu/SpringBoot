@@ -68,6 +68,7 @@ public class ProductServiceDBImpl implements ProductService {
         return productRepository.save(productToUpdate.get());
     }
 
+
     private Category getCategoryOrCreate(Product product) {
         String categoryName = product.getCategory().getName();
 
@@ -78,11 +79,27 @@ public class ProductServiceDBImpl implements ProductService {
             Category toSaveCategory = new Category();
             toSaveCategory.setName(categoryName);
 
-            toBePutInProduct = categoryRepository.save(toSaveCategory);
+            toBePutInProduct = toSaveCategory;
         } else {
             toBePutInProduct = category.get();
         }
         return toBePutInProduct;
     }
+
+
+    @Override
+    public void deleteProduct(Long ProductId) {
+        Optional<Product> productToDelete = productRepository.findById(ProductId);
+
+        if(productToDelete.isEmpty()){
+            throw new ProductNotFoundException("Product not found with id: " + ProductId);
+        }
+
+        productToDelete.get().setDeleted(true);
+
+        productRepository.save(productToDelete.get());
+    }
+
+
 
 }

@@ -72,4 +72,9 @@ public class ProductServiceFakeStoreImpl implements ProductService {
 
     }
 
+    @Override
+    public void deleteProduct(Long ProductId) {
+
+    }
+
 }

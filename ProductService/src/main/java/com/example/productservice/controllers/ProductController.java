@@ -61,10 +61,17 @@ public class ProductController {
     }
 
 
-    @RequestMapping(name = "NAMAN", value = "/naman")
-    public String naman(){
-        return "Customized Request";
+    @DeleteMapping("/{id}")
+    public String SoftDeleteProduct(@PathVariable("id") Long ProductId){
+        productService.deleteProduct(ProductId);
+        return "ProductID : " + ProductId + " got deleted successfully";
     }
+
+
+//    @RequestMapping(name = "NAMAN", value = "/naman")
+//    public String naman(){
+//        return "Customized Request";
+//    }
 
 
 }
