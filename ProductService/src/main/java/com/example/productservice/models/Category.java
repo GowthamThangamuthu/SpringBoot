@@ -1,9 +1,10 @@
 package com.example.productservice.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import java.util.List;
 
@@ -14,10 +15,14 @@ public class Category extends BaseModel{
     private String name;
     private String description;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     private List<Product> featuredProducts;
 
-    @OneToMany(mappedBy = "category")
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST,mappedBy = "category")
+    @Fetch(FetchMode.SELECT)
     private List<Product> allproducts;
+
+    @OneToOne(cascade = {})
+    private Subcategory subcategories;
 
 }
